@@ -9,7 +9,7 @@ body{
 }
 #top{
 	height: 55px;
-	width: 100%;
+	/*width: 100%;*/
 	background-color: rgb(243,243,243);
 }
 #top img{
@@ -53,4 +53,10 @@ body{
 	left: -60px;
 	cursor: pointer;
 	background-color: rgb(114,97,110);
+}
+#myCanvas{
+	margin-left: 20%;
+	position: relative;
+	top: 100%;
+	opacity: 0;
 }

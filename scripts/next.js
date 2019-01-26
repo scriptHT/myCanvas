@@ -1,24 +1,34 @@
 if (document.getElementById("nextPage")) {
-	 oNextPage = document.getElementById("nextPage");
+    oNextPage = document.getElementById("nextPage");
 };
 if (document.getElementById("prePage")) {
-	var oPrePage = document.getElementById("prePage");
+    var oPrePage = document.getElementById("prePage");
 };
 if (document.getElementsByClassName('nextImg')[0]) {
-	 oNextImg = document.getElementsByClassName('nextImg')[0];
+    oNextImg = document.getElementsByClassName('nextImg')[0];
 };
 if (document.getElementsByClassName('preImg')[0]) {
-	var oPreImg = document.getElementsByClassName('preImg')[0];
+    var oPreImg = document.getElementsByClassName('preImg')[0];
+};
+if (document.getElementById("wrap")) {
+    var oWrap = document.getElementById("wrap");
 };
 if (document.getElementsByTagName("a")) {
-	var oA = document.getElementsByTagName("a");
+    var oA = document.getElementsByTagName("a");
 };
 if (document.getElementById("canvas")) {
      canvas = document.getElementById("canvas");
 };
+//变化后的颜色
+var colorArr = ["rgb(46,39,44)","rgb(93,53,43)","rgb(8,33,57)"
+,"rgb(92,30,30)","rgb(65,79,77)","rgb(8,50,51)"];
+//本色
+var colorArr2 = ["rgb(114,97,110)","rgb(232,132,107)","rgb(22,82,142)"
+,"rgb(229,75,75)","rgb(162,97,91)","rgb(22,142,128)"];
 //创建一个所有页面的相对路径的数组
 var pagesArray = ["index.html","page1.html","page2.html","page3.html",
-"page4.html","page5.html","page6.html"]
+"page4.html","page5.html","page6.html"];
+
 //获取当前页面的相对路径  跟数组中的格式相同！
 function GetUrlRelativePath(){
 　var url = document.location.toString();
@@ -33,17 +43,20 @@ function GetUrlRelativePath(){
 　}
 　return relUrl;
 }
+
 //鼠标靠边，下一页/上一页  出现   
 ~~function move () {
     //当鼠标位置超过当前窗口宽度的97%
     document.onmousemove = function  (e) {
-    	// console.log(typeof(oPrePage))//undefined
+        // console.log(typeof(oPrePage))//undefined
         //让右边的下一页  出现
-        if (e.clientX >= parseInt(window.innerWidth)*0.97 && typeof(oNextPage) != "undefined") {
-            oNextPage.style.left = "97%";
+        // console.log(e.clientX + "------");
+        if (e.clientX >= window.innerWidth-60 && typeof(oNextPage) != "undefined") {
+            // console.log(window.innerWidth-60+"++++++");
+            oNextPage.style.left = window.innerWidth-60 + "px";
             oNextPage.style.transition = "0.3s";
-        }else if(e.clientX <= parseInt(window.innerWidth)*0.97 && typeof(oNextPage) != "undefined"){
-            oNextPage.style.left = "100%";
+        }else if(e.clientX <= window.innerWidth-60 && typeof(oNextPage) != "undefined"){
+            oNextPage.style.left = window.innerWidth + "px";
         }
         //如果鼠标位置小于60px，就让左边的上一页出现
         if (e.clientX <= 60 && typeof(oPrePage) != "undefined") {
@@ -67,76 +80,94 @@ if (typeof(oNextImg) != "undefined") {
 if (typeof(oNextPage) != "undefined") {
 	oNextPage.onclick  = gotoPage;
 };
+
 //先封装跳转上一页和下一页的函数
 function gotoPage () {
-        //让canvas下滑  ，透明度变为0
-        canvasDis();
         //让页面的onmousemove事件清空
         document.onmousemove = null;
-        //设置定时器在canvas消失之后，
         //跳转下一页或者上一页动画
         //如果点下一页
         document.onclick = function  (e) {
-            if (e.clientX >= parseInt(window.innerWidth)*0.97) {
-                //半秒之后让oNextPage沾满屏幕
-                setTimeout(function  () {
-                    oNextPage.style.left = "0";
-                    oNextPage.style.width = "100%";
-                    oNextPage.style.transition = "0.3s";
-                    },300)
-                    //跳转下一页或者上一页
-                    function gotoNextPage () {
-                        // console.log(pagesArray.length);//7
+            //如果点击上一页
+            if (e.clientX >= window.innerWidth-60) {
+                    ~~function gotoNextPage () {
+                        //让canvas消失
+                        canvasDisL();
                         //判断当前页面在数组中的index
                         for (let i = 0; i <= pagesArray.length; i++) {
-                            // console.log(i);//0
                             if (GetUrlRelativePath() == pagesArray[i]) {
-                                // console.log(i+"00000");
+                                //设置定时器在canvas消失之后，
+                                //0.3s之后让oNextPage沾满屏幕
+                                setTimeout(function  () {
+                                    oNextPage.style.left = "0";
+                                    oNextPage.style.width = "100%";
+                                    oNextPage.style.transition = "0.2s";
+                                    oWrap.style.backgroundColor = colorArr2[i];
+                                    oWrap.style.transition = "0.4s";
+                                },300)
                                 // console.log(pagesArray[i]);
-                                window.location.href = pagesArray[i+1];
-                                return ;
+                                setTimeout(function  () {
+                                    window.location.href = pagesArray[i+1];
+                                },600)
+                                return i;
                             };
                         };
-                  };
-                  setTimeout(function  () {
-                      gotoNextPage();
-                  },600)
+                  }();
             };
             //如果点上一页
             if(e.clientX <= 60){
-                setTimeout(function  () {
-                    oPrePage.style.width = "100%";
-                    oPrePage.style.transition = "0.3s";
-            },300)
-                function gotoPrePage () {
+                ~~function gotoPrePage () {
+                    canvasDisR();
                     //判断当前页面在数组中的index
                     for (let i = 0; i <= pagesArray.length; i++) {
                         if (GetUrlRelativePath() == pagesArray[i]) {
-                            // console.log(i+"00000");
-                            // console.log(pagesArray[i]);
-                            window.location.href = pagesArray[i - 1];
+                            setTimeout(function  () {
+                                oPrePage.style.width = "100%";
+                                oPrePage.style.transition = "0.2s";
+                                oWrap.style.backgroundColor = colorArr2[i-1];
+                                oWrap.style.transition = "0.4s";
+                            },300)
+                            setTimeout(function  () {
+                                window.location.href = pagesArray[i - 1];
+                             },600)
                             return i;
                         };
                     };
-                }
-                setTimeout(function  () {
-                      gotoPrePage();
-                  },600)
+                }();
             }
         }
 }
 //canvas出现
 window.onload = function  () {
+    if (typeof (canvas) != "undefined") {
     canvas.style.top = "0";
     canvas.style.opacity = "1";
-    canvas.style.transition = "0.3s";
+    canvas.style.transition = "0.3s";}
 }
 //canvas消失
+//向下
 function canvasDis  () {
     //判断canvas存不存在
     if (typeof (canvas) != "undefined") {
-        // console.log(canvas);
-        canvas.style.top = "100%";
+        canvas.style.top  = "100%";
+        canvas.style.opacity = "0";
+        canvas.style.transition = "0.3s";
+    };
+}
+//向右
+function canvasDisL  () {
+    //判断canvas存不存在
+    if (typeof (canvas) != "undefined") {
+        canvas.style.marginLeft  = "-60%";
+        canvas.style.opacity = "0";
+        canvas.style.transition = "0.3s";
+    };
+}
+//向左
+function canvasDisR  () {
+    //判断canvas存不存在
+    if (typeof (canvas) != "undefined") {
+        canvas.style.marginLeft  = "100%";
         canvas.style.opacity = "0";
         canvas.style.transition = "0.3s";
     };
@@ -156,19 +187,6 @@ function gotoIndex () {
         };
      };
 }
-// 监听页面返回事件
-// ~~function(){
-//     window.addEventListener("popstate", function(e) {
-        //........
-//     }, false);
-//     ~~function pushHistory() {
-//       var state = {
-//           title: "title",
-//           url: "#"
-//       };
-//       window.history.pushState(state, "title", "#");
-//     }();
-// }()
 ~~function fobidden_back() {
     //防止页面后退
     history.pushState(null, null, document.URL);
@@ -182,3 +200,16 @@ function enable_back() {
 function back_common() {
     history.pushState(null, null, document.URL);
 }
+// 监听页面返回事件
+// ~~function(){
+//     window.addEventListener("popstate", function(e) {
+        //........
+//     }, false);
+//     ~~function pushHistory() {
+//       var state = {
+//           title: "title",
+//           url: "#"
+//       };
+//       window.history.pushState(state, "title", "#");
+//     }();
+// }()

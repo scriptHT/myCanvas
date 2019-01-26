@@ -43,6 +43,12 @@ function oSPload (time1,time2) {
 		},time2)
 	}) ;
 }
+//让top等于浏览器宽度
+~~function  () {
+	window.onresize = arguments.callee;
+	var w = window.innerWidth;
+	oTop.width = w;
+}
 function load () {
 	logoLoad(500);
 	oSPload(1200,800);
@@ -63,11 +69,6 @@ function load () {
 		},100)
 	}) ;
 }
-// window.onload=load();
-
-//创建一个颜色数组，后面要用
-var colorArr = ["rgb(46,39,44)","rgb(93,53,43)","rgb(8,33,57)"
-,"rgb(92,30,30)","rgb(65,79,77)","rgb(8,50,51)"]
 ~~function  () {
 	Array.prototype.forEach.call(oPages,function  (ele,index,self) {
 		// 鼠标hover效果
@@ -77,9 +78,9 @@ var colorArr = ["rgb(46,39,44)","rgb(93,53,43)","rgb(8,33,57)"
 					oPages[i].style.backgroundColor = colorArr[i];
 				};
 				this.style.width = "380px";
-				this.style.transition = "0.5s";
+				this.style.transition = oSpans[index].style.transition = "0.5s";
 				oSpans[index].style.bottom = "0px";
-				oSpans[index].style.transition = "0.5s";
+				
 				oWord1[index].style.color = "white";
 				oPages[index].style.backgroundColor = "";
 				if (oPages[index - 1]) {
@@ -147,7 +148,7 @@ var colorArr = ["rgb(46,39,44)","rgb(93,53,43)","rgb(8,33,57)"
 			};
 			//控制page底部蒙版减退
 			oSpans[index].style.bottom = "-100px";
-			oSpans[index].style.transition = "0.5s";
+			// oSpans[index].style.transition = "0.5s";
 		}) 
 	}) ;
 }();

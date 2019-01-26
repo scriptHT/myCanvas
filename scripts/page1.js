@@ -4,7 +4,6 @@ let width = canvas.width = parseInt(window.innerWidth) * 0.6;
 let height = canvas.height = window.innerHeight;
 let ctx = canvas.getContext("2d");
 ctx.fillRect(0, 0, width, height);
-
 // 随机数
 function random(min, max) {
     let num = Math.floor(Math.random() * (max - min) + min);
